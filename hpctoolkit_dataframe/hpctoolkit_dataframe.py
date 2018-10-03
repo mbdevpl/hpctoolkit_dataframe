@@ -1,6 +1,7 @@
 """Operate on HPCtoolkit XML database files as pandas DataFrames."""
 
 from cmath import sqrt  # used in formulas for metrics
+import collections
 import logging
 import pathlib
 import pprint
@@ -8,6 +9,8 @@ import re
 import typing as t
 import xml.etree.ElementTree as ET
 
+import matplotlib.pyplot as plt
+import numpy as np
 import ordered_set
 import pandas as pd
 
@@ -44,6 +47,8 @@ _LOCATION_DATA_TRANSFORMERS = {
     ('i', None): lambda _, data: int(data)}
 
 _ROOT_INDEX = -1
+
+_NORMALIZATION_CONSTANT = 2 * np.pi
 
 
 def _read_xml(path: pathlib.Path) -> ET.ElementTree:
@@ -422,3 +427,108 @@ class HPCtoolkitDataFrame(pd.DataFrame):
                 break
 
         return self[self.callpath.isin(hot_callpaths)]
+
+    def flame_graph(
+            self, prefix=(), column='CPUTIME (usec):Mean (I) ratio of parent',
+            min_depth=None, max_depth=None,
+            shape: str = 'rect', style: str = 'flame', highlight=None):
+        """Stack trace graph.
+
+        shape: 'rect' or 'wheel'
+        style: 'flame', 'skyline', 'mountains'
+        """
+        if min_depth is None:
+            min_depth = len(prefix) + 1
+        assert min_depth > len(prefix), min_depth
+        assert shape in {'rect', 'wheel'}, shape
+        if style == 'flame':
+            color_map = plt.get_cmap('autumn')
+            colors = lambda n: color_map(np.linspace(0, 1, n))
+        else:
+            color_map = plt.get_cmap('tab20c')
+            colors = lambda n: color_map(np.arange(n))
+        fig, ax = plt.subplots(subplot_kw=dict(polar=shape == 'wheel'), figsize=(16, 16))
+        thickness = 1
+
+        at_depth = {}
+
+        base = self.at_paths(prefix=prefix)
+
+        # for depth in range(min_depth, max_depth + 1):
+        depth = min_depth
+        while max_depth is None or depth <= max_depth:
+            _LOG.info('at depth %i', depth)
+            at_depth[depth] = {}
+            df = base.at_depth(depth)
+            at_depth[depth]['df'] = df
+            if df.empty:
+                break
+
+            ids = at_depth[depth]['df']['id'].values
+            _LOG.info('ids:  %s', ids)
+            raw_values = at_depth[depth]['df'][column].values
+            _LOG.debug('raw:  %s', raw_values)
+
+            if depth - 1 in at_depth:
+                # normalize data to previous layer
+                by_parent = {}
+                for i, (_, series) in enumerate(at_depth[depth]['df'].iterrows()):
+                    callpath = series['callpath']
+                    parent = callpath[-2]
+                    if parent not in by_parent:
+                        by_parent[parent] = []
+                    by_parent[parent].append((i, series))
+                _LOG.debug('by parent: %s', {_: [i for i, series in items]
+                                             for _, items in by_parent.items()})
+
+                normalized_values = []
+                offsets = []
+                for parent, items in by_parent.items():
+                    ratio = at_depth[depth - 1]['widths'][parent] / _NORMALIZATION_CONSTANT
+                    raw_items = np.array([raw_values[i] for i, _ in items])
+                    normalized_items = raw_items / np.sum(raw_items) * _NORMALIZATION_CONSTANT * ratio
+                    normalized_values += list(normalized_items)
+
+                    base_offest = at_depth[depth - 1]['offsets'][parent]
+                    items_offsets = np.append(0, normalized_items.cumsum()[:-1]) + base_offest
+                    assert len(normalized_items) == len(items_offsets)
+                    offsets += list(items_offsets)
+                widths = np.array(normalized_values)
+                offsets = np.array(offsets)
+                assert len(widths) == len(offsets)
+            else:
+                widths = raw_values / np.sum(raw_values) * _NORMALIZATION_CONSTANT
+                _LOG.debug('norm const: %f', _NORMALIZATION_CONSTANT)
+                offsets = np.append(0, widths.cumsum()[:-1])
+            at_depth[depth]['offsets'] = collections.OrderedDict(
+                [(id_, _) for id_, _ in zip(ids, offsets)])
+            _LOG.info('offsets: %s', offsets)
+
+            at_depth[depth]['widths'] = collections.OrderedDict(
+                [(id_, _) for id_, _ in zip(ids, widths)])
+            _LOG.info('widths: %s', widths)
+
+            y = (depth - min_depth + 1) * thickness
+            ax.bar(
+                x=offsets, width=widths, bottom=y, height=thickness,
+                color=colors(len(offsets)), edgecolor='w', linewidth=1, align='edge')
+
+            for i, id_ in enumerate(ids):
+                if widths[i] < np.pi / (depth - min_depth + 32):
+                    continue
+                x = offsets[i] + widths[i] / 2
+                if shape == 'wheel':
+                    rotation = x * 180 / np.pi - 90
+                else:
+                    rotation = 0
+                # text = str(id_)
+                text = self.loc[id_]['procedure']
+                ax.text(
+                    x=x, y=y + thickness * 0.2, s=text,
+                    rotation=rotation,
+                    horizontalalignment='center', verticalalignment='center')
+            depth += 1
+
+        ax.set(title=self._db_path.name)
+        ax.set_axis_off()
+        plt.show()
