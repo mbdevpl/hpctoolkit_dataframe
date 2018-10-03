@@ -1,0 +1,7 @@
+docutils
+line_profiler
+pip >= 9.0
+pygments
+setuptools >= 20.5
+wheel
+-rrequirements.txt
