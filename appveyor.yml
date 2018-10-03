@@ -1,0 +1,33 @@
+version: "{build}"
+
+environment:
+  matrix:
+    - ARCHITECTURE: "x86"
+      PYTHON_VERSION: "3.6"
+      PYTHON: "C:\\Python36"
+    - ARCHITECTURE: "x64"
+      PYTHON_VERSION: "3.6"
+      PYTHON: "C:\\Python36-x64"
+    - ARCHITECTURE: "x86"
+      PYTHON_VERSION: "3.7"
+      PYTHON: "C:\\Python37"
+    - ARCHITECTURE: "x64"
+      PYTHON_VERSION: "3.7"
+      PYTHON: "C:\\Python37-x64"
+
+init:
+  - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+
+install:
+  - python -m pip install -U pip
+  - python -m pip install -U -r dev_requirements.txt
+
+build: off
+
+test_script:
+  - set TEST_PACKAGING=1
+  - python -m coverage run --branch --source . -m unittest -v
+
+after_test:
+  - python -m coverage report --show-missing
+  - codecov

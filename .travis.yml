@@ -1,0 +1,42 @@
+sudo: false
+language: generic
+matrix:
+  include:
+    - os: linux
+      language: python
+      python: "3.6"
+    - os: linux
+      dist: xenial
+      sudo: true
+      language: python
+      python: "3.7"
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION="3.6.6"
+    - os: osx
+      language: generic
+      env: TRAVIS_PYTHON_VERSION="3.7.0"
+
+before_install: |
+  set -e
+  if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+    brew update
+    brew install pyenv || brew upgrade pyenv
+    pyenv install "${TRAVIS_PYTHON_VERSION}"
+    export PATH="$HOME/.pyenv/versions/${TRAVIS_PYTHON_VERSION}/bin:${PATH}"
+  fi
+  set +e
+
+install:
+  - pip install -U pip
+  - pip install -U -r dev_requirements.txt
+
+script:
+  - TEST_PACKAGING=1 python -m coverage run --branch --source . -m unittest -v
+
+after_success:
+  - python -m coverage report --show-missing
+  - codecov
+
+notifications:
+  email: false
