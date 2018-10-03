@@ -13,8 +13,8 @@ HPCtoolkit DataFrame
     :target: https://pypi.org/project/hpctoolkit_dataframe
     :alt: package version from PyPI
 
-.. image:: https://travis-ci.org/mbdevpl/hpctoolkit_dataframe.svg?branch=master
-    :target: https://travis-ci.org/mbdevpl/hpctoolkit_dataframe
+.. image:: https://travis-ci.com/mbdevpl/hpctoolkit_dataframe.svg?branch=master
+    :target: https://travis-ci.com/mbdevpl/hpctoolkit_dataframe
     :alt: build status from Travis CI
 
 .. image:: https://ci.appveyor.com/api/projects/status/github/mbdevpl/hpctoolkit_dataframe?svg=true
