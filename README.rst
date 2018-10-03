@@ -35,6 +35,11 @@ Operate on HPCtoolkit XML database files as pandas DataFrames.
     :backlinks: none
 
 
+Usage
+=====
+
+Please see `<examples.ipynb>`_ for details.
+
 
 Installation
 ============
