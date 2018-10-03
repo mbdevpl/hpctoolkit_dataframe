@@ -444,6 +444,12 @@ class HPCtoolkitDataFrame(pd.DataFrame):
         if style == 'flame':
             color_map = plt.get_cmap('autumn')
             colors = lambda n: color_map(np.linspace(0, 1, n))
+        elif style == 'skyline':
+            color_map = plt.get_cmap('YlGnBu')
+            colors = lambda n: color_map(np.linspace(0, 1, n))
+        elif style == 'mountains':
+            color_map = plt.get_cmap('Greys')
+            colors = lambda n: color_map(np.linspace(0, 1, n))
         else:
             color_map = plt.get_cmap('tab20c')
             colors = lambda n: color_map(np.arange(n))
