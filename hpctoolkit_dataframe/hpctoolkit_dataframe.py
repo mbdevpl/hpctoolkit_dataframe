@@ -9,7 +9,6 @@ import re
 import typing as t
 import xml.etree.ElementTree as ET
 
-import matplotlib.pyplot as plt
 import numpy as np
 import ordered_set
 import pandas as pd
@@ -437,6 +436,7 @@ class HPCtoolkitDataFrame(pd.DataFrame):
         shape: 'rect' or 'wheel'
         style: 'flame', 'skyline', 'mountains'
         """
+        import matplotlib.pyplot as plt
         if min_depth is None:
             min_depth = len(prefix) + 1
         assert min_depth > len(prefix), min_depth
