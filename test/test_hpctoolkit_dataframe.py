@@ -30,7 +30,6 @@ _LOG.setLevel(logging.DEBUG)
 
 class Tests(unittest.TestCase):
 
-
     def test_load(self):
         for path in _HERE.glob('data/experiment*.xml'):
             with self.subTest(path=path):
