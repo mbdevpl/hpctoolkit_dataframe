@@ -18,7 +18,7 @@ HPCtoolkit DataFrame
     :alt: build status from Travis CI
 
 .. image:: https://ci.appveyor.com/api/projects/status/github/mbdevpl/hpctoolkit_dataframe?svg=true
-    :target: https://ci.appveyor.com/project/mbdevpl/hpctoolkit_dataframe
+    :target: https://ci.appveyor.com/project/mbdevpl/hpctoolkit-dataframe
     :alt: build status from AppVeyor
 
 .. image:: https://codecov.io/gh/mbdevpl/hpctoolkit_dataframe/branch/master/graph/badge.svg
