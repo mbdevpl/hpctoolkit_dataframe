@@ -69,7 +69,7 @@ def _derive_metrics_formulas(
             if formula.attrib['t'] != 'finalize':
                 continue
             raw_formula = formula.attrib['frm']
-            formula_code = re.sub('\$[0-9]+', _metrics_formula_sub_predicate, raw_formula)
+            formula_code = re.sub(r'\$[0-9]+', _metrics_formula_sub_predicate, raw_formula)
             compiled_formula = eval('lambda self, data: {}'.format(formula_code), None, None)
             metrics_formulas[metric.attrib['n']] = (formula_code, compiled_formula)
             break
@@ -453,7 +453,7 @@ class HPCtoolkitDataFrame(pd.DataFrame):
         else:
             color_map = plt.get_cmap('tab20c')
             colors = lambda n: color_map(np.arange(n))
-        fig, ax = plt.subplots(subplot_kw=dict(polar=shape == 'wheel'), figsize=(16, 16))
+        _, ax = plt.subplots(subplot_kw=dict(polar=shape == 'wheel'), figsize=(16, 16))
         thickness = 1
 
         at_depth = {}
