@@ -427,6 +427,29 @@ class HPCtoolkitDataFrame(pd.DataFrame):
 
         return self[self.callpath.isin(hot_callpaths)]
 
+    def call_graph(self, prefix=(),
+                   min_depth: t.Optional[int] = None, max_depth: t.Optional[int] = None):
+        if min_depth is None:
+            min_depth = 0
+        base = self.at_paths(prefix=prefix).at_depths(min_depth=min_depth, max_depth=max_depth)
+        dictt = {}
+        for _, row in base.iterrows():
+            prefix_part = {
+                'root': '',
+                'procedure frame': '  ',
+                'callsite': '  ',
+                'procedure': '  ',
+                'statement': '  ',
+                'loop': '| '}[row.at['type']]
+            dictt[row.at['id']] = prefix_part
+
+        lines = []
+        for _, row in base.iterrows():
+            prefix = ''.join(dictt[_] for _ in row.at['callpath'][min_depth:-1] if dictt[_] is not None)
+            lines.append(f'{prefix}{"*" if row.at["type"] == "loop" else ""}{row.at["type"]}'
+                         f' in {row.at["procedure"]} ({row.at["file"]}:{row.at["line"]})')
+        return '\n'.join(lines)
+
     def flame_graph(
             self, prefix=(), column='CPUTIME (usec):Mean (I) ratio of parent',
             min_depth=None, max_depth=None,
