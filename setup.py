@@ -9,7 +9,7 @@ class Package(setup_boilerplate.Package):
 
     name = 'hpctoolkit_dataframe'
     description = 'operate on HPCtoolkit XML database files as pandas DataFrames'
-    download_url = 'https://github.com/mbdevpl/hpctoolkit_dataframe'
+    url = 'https://github.com/mbdevpl/hpctoolkit_dataframe'
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console',
