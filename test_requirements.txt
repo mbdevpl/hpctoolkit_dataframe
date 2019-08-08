@@ -1,7 +1,7 @@
 docutils
 line_profiler; python_version == '3.6'
-pip >= 9.0
+pip >= 10.0
 pygments
-setuptools >= 20.5
+setuptools >= 41.0
 wheel
 -rrequirements.txt
