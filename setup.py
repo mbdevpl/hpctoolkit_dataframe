@@ -1,14 +1,13 @@
 """Setup script for hpctoolkit_dataframe package."""
 
-import setup_boilerplate
+import boilerplates.setup
 
 
-class Package(setup_boilerplate.Package):
-
+class Package(boilerplates.setup.Package):
     """Package metadata."""
 
     name = 'hpctoolkit_dataframe'
-    description = 'operate on HPCtoolkit XML database files as pandas DataFrames'
+    description = 'Operate on HPCtoolkit XML database files as pandas DataFrames.'
     url = 'https://github.com/mbdevpl/hpctoolkit_dataframe'
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',
@@ -17,9 +16,13 @@ class Package(setup_boilerplate.Package):
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
-        'Operating System :: POSIX',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Operating System :: MacOS',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3 :: Only',
         'Topic :: Scientific/Engineering',
         'Topic :: Utilities']

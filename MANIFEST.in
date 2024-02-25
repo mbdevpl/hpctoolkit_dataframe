@@ -1,6 +1,8 @@
-include setup_boilerplate.py
-include *requirements.txt
+include requirements.txt
 include LICENSE
 include NOTICE
 include ./*/py.typed
-recursive-include ./test/data *.*
+
+include requirements_test.txt
+recursive-include ./test __init__.py
+recursive-include ./test/data *
