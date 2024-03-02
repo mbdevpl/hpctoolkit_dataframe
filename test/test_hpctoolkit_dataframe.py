@@ -5,8 +5,9 @@ import datetime
 import logging
 import os
 import pathlib
-import sys
 import unittest
+
+import line_profiler
 
 import hpctoolkit_dataframe
 from hpctoolkit_dataframe import HPCtoolkitDataFrame
@@ -58,9 +59,7 @@ class Tests(unittest.TestCase):
                 self.assertIsNotNone(df)
         HPCtoolkitDataFrame._skip_callsite = True
 
-    @unittest.skipIf(sys.version_info[:2] != (3, 6), 'run only on Python 3.6')
     def test_performance(self):
-        import line_profiler
         profiler = line_profiler.LineProfiler()
         profiler.add_module(hpctoolkit_dataframe)
         for path in _HERE.glob('data/experiment*.xml'):

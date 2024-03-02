@@ -2,4 +2,4 @@ matplotlib
 numpy
 ordered_set
 pandas
-version-query
+version-query ~= 1.5

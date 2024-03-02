@@ -1,7 +1,0 @@
-docutils
-line_profiler; python_version == '3.6'
-pip >= 10.0
-pygments
-setuptools >= 41.0
-wheel
--rrequirements.txt
