@@ -18,7 +18,7 @@ Operate on HPCtoolkit XML database files as pandas DataFrames.
     :target: https://github.com/mbdevpl/hpctoolkit_dataframe/actions
     :alt: build status from GitHub
 
-.. image:: https://codecov.io/gh/mbdevpl/hpctoolkit_dataframe/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/mbdevpl/hpctoolkit_dataframe/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/mbdevpl/hpctoolkit_dataframe
     :alt: test coverage from Codecov
 
