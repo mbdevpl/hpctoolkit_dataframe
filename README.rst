@@ -11,7 +11,7 @@ HPCtoolkit DataFrame
 Operate on HPCtoolkit XML database files as pandas DataFrames.
 
 .. image:: https://img.shields.io/pypi/v/hpctoolkit_dataframe.svg
-    :target: https://pypi.org/project/hpctoolkit_dataframe
+    :target: https://pypi.org/project/hpctoolkit-dataframe
     :alt: package version from PyPI
 
 .. image:: https://github.com/mbdevpl/hpctoolkit_dataframe/actions/workflows/python.yml/badge.svg?branch=main
